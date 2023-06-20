@@ -1,72 +1,72 @@
 const sql = require("./db.js");
 //Construtor
-const ProdutoModel = function(produto){
-    this.nome = produto.nome;
-    this.valor= produto.valor;
+const PedidoModel = function(pedido){
+    this.hora = pedido.hora;
+    this.status= pedido.status;
 }
 //Cria novo produto no banco
-ProdutoModel.create = (produto, result) => {
-    sql.query("insert into produtos set ?", produto, (err,res) =>{
+PedidoModel.create = (pedido, result) => {
+    sql.query("insert into pedidos set ?", pedido, (err,res) =>{
         if (err) {
             console.log("Erro: ", err);
             result(err,null);
             return;
         }
 
-        console.log("Produto criado", {idprodutos: res.insertId, ...produto})
-        result(null, {idprodutos: res.insertId, ...produto});
+        console.log("Pedido criado", {idpedidos: res.insertId, ...pedido})
+        result(null, {idpedidos: res.insertId, ...pedido});
     })
 };
 //Seleciona produto por ID
-ProdutoModel.findById = (produtoId, result) => {
-    sql.query("Select * from produtos where idprodutos = "+produtoId, (err, res) => {
+PedidoModel.findById = (pedidoId, result) => {
+    sql.query("Select * from pedidos where idpedidos = "+pedidoId, (err, res) => {
         if (err) {
             console.log("erro: ", err);
             result(null,err);
             return;
         }
         if (res.length) {
-            console.log("Produto Encontrado", res[0]);
+            console.log("Pedido Encontrado", res[0]);
             result(null,res[0]);
         }else{
             result({type: "not_found"}, null);
-            console.log("Produto não encontrado");
+            console.log("Pedido não encontrado");
         }
     }) 
 };
 //Seleciona todos os produtos
-ProdutoModel.getAll = result => {
-    sql.query("SELECT * FROM produtos", (err, res) => {
+PedidoModel.getAll = result => {
+    sql.query("SELECT * FROM pedidos", (err, res) => {
         if (err) {
             console.log("erro: ", err);
             result(null, err);
             return;
         }
 
-        console.log("produto: ", res);
+        console.log("pedido: ", res);
         result(null, res);
     })
 };
 //Atualizar produto por id
-ProdutoModel.updateById = (produtoId, produto, result) => {
-    sql.query("UPDATE produtos SET nome = ?, valor = ? WHERE idprodutos = ?",
-               [produto.nome, produto.valor, produtoId], (err, res) => {
+PedidoModel.updateById = (pedidoId, pedido, result) => {
+    sql.query("UPDATE pedidos SET hora = ?, status = ? WHERE idpedidos = ?",
+               [pedido.hora, pedido.status, pedidoId], (err, res) => {
                 if (err){
                     console.log("erro: ", err);
                     result(null,err);
                 }else if (res.affectedRows == 0){
                     result({ type: "not_found"}, null);
                 } else{
-                    console.log("Produto atualizado: ", {idprodutos: produtoId, ...produto});
-                    result(null,{idprodutos: produtoId, ...produto});
+                    console.log("Pedido atualizado: ", {idpedidos: pedidoId, ...pedido});
+                    result(null,{idpedidos: pedidoId, ...pedido});
                 }
          });
 };
 
 //Remover Produtos po ID
-ProdutoModel.remove = (produtoId, result) => {
+PedidoModel.remove = (pedidoId, result) => {
 
-    sql.query("DELETE FROM produtos WHERE idprodutos = ?", produtoId, (err, res) =>{
+    sql.query("DELETE FROM pedidos WHERE idpedidos = ?", pedidoId, (err, res) =>{
 
         if (err) {
 
@@ -88,8 +88,8 @@ ProdutoModel.remove = (produtoId, result) => {
 
 };
 //Remover todos os produtos
-ProdutoModel.removeAll = (result) => {
-    sql.query("DELETE FROM produtos ", produtoId, (err, res) =>{
+PedidoModel.removeAll = (result) => {
+    sql.query("DELETE FROM pedidos ", pedidoId, (err, res) =>{
 
         if (err) {
 
@@ -110,4 +110,4 @@ ProdutoModel.removeAll = (result) => {
     });
 };
 
-module.exports = ProdutoModel;
+module.exports = PedidoModel;
